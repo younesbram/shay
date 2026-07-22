@@ -115,6 +115,9 @@ do {
         try runtime.controller.guardOnce()
     case "-status", "status":
         print(runtime.controller.status(color: useColor(environment)))
+    case "prompt":
+        let output = runtime.controller.promptStatus()
+        if !output.isEmpty { print(output) }
     case "selftest":
         guard SafetyResult.evaluate(battery: 26, thermal: .nominal) == .safe,
               SafetyResult.evaluate(battery: 25, thermal: .nominal) == .unsafe("battery_25_percent"),

@@ -106,14 +106,17 @@ private struct NativeTests {
         let controller = ShayController(system: system, state: state, privileged: true)
         _ = try controller.enable()
         expect(state.enabled && system.sleep == 1, "verified enable")
+        expect(controller.promptStatus() == "shay ∞", "indefinite prompt status")
         system.power = PowerSnapshot(source: "Battery Power", batteryPercent: 25)
         try controller.guardOnce()
         expect(!state.enabled && system.sleep == 0 && state.read("last_reason") == "battery_25_percent", "guard trip")
+        expect(controller.promptStatus().isEmpty, "offline prompt status")
 
         system.power = PowerSnapshot(source: "AC Power", batteryPercent: 80)
         system.timestamp = 1_000
         _ = try controller.enable(expiresAt: 1_060)
         expect(state.enabled && state.read("expires_at") == "1060", "expiry persisted")
+        expect(controller.promptStatus() == "shay 1m", "expiring prompt status")
         system.timestamp = 1_060
         try controller.guardOnce()
         expect(!state.enabled && system.sleep == 0 && state.read("last_reason") == "expired", "expiry restored sleep")

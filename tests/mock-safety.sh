@@ -55,6 +55,7 @@ reset_fixture
 run_helper on >/dev/null
 assert_file_value "$MOCK_ROOT/sleep_disabled" "1"
 [[ -e "$STATE_DIR/enabled" ]] || fail "enable marker missing"
+[[ "$(run_helper prompt)" == "shay ∞" ]] || fail "indefinite prompt status"
 run_helper off >/dev/null
 assert_file_value "$MOCK_ROOT/sleep_disabled" "0"
 [[ ! -e "$STATE_DIR/enabled" ]] || fail "enable marker survived off"
@@ -64,6 +65,7 @@ reset_fixture
 future=$(( $(/bin/date +%s) + 3600 ))
 print -r -- "$future" | run_helper on-expiring >/dev/null
 assert_file_value "$STATE_DIR/expires_at" "$future"
+[[ "$(run_helper prompt)" == "shay 1h" ]] || fail "expiring prompt status"
 expiry_status=$(NO_COLOR=1 run_helper status)
 [[ "$expiry_status" == *"Expiry"* && "$expiry_status" != *"Expiry      never"* ]] || fail "expiry status rendering"
 print -r -- "$(( $(/bin/date +%s) - 1 ))" >| "$STATE_DIR/expires_at"

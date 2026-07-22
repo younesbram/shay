@@ -131,6 +131,20 @@ public final class ShayController {
         return StatusRenderer().render(snapshot, color: color)
     }
 
+    public func promptStatus() -> String {
+        guard state.enabled else { return "" }
+        guard state.contains("expires_at") else { return "shay ∞" }
+        guard let raw = state.read("expires_at"), let deadline = Int64(raw) else { return "shay !" }
+
+        let remaining = deadline - system.now()
+        guard remaining > 0 else { return "shay due" }
+        let minutes = max(1, (remaining + 59) / 60)
+        if minutes < 60 { return "shay \(minutes)m" }
+        let hours = (minutes + 59) / 60
+        if hours < 24 { return "shay \(hours)h" }
+        return "shay \((hours + 23) / 24)d"
+    }
+
     private func requireRoot() throws {
         guard privileged else { throw ShayError.rootRequired }
     }

@@ -59,6 +59,23 @@ Expiry is enforced on the next 15-second guard check.
 
 Disable status colors with `NO_COLOR=1 shay -status`.
 
+## Starship
+
+Add `${custom.shay}` to your top-level Starship `format`, then add:
+
+```toml
+[custom.shay]
+command = "/usr/local/bin/shay prompt"
+when = "test -f /var/db/shay/enabled"
+format = '[\[$output\]]($style) '
+style = "bold cyan"
+shell = ["/bin/sh"]
+description = "Shay awake status and expiry"
+```
+
+It stays hidden while Shay is off and renders `[shay ∞]`, `[shay 4h]`, or
+`[shay !]` if its expiry state is invalid.
+
 ## Remove
 
 ```sh

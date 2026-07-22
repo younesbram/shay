@@ -1,7 +1,7 @@
 import Foundation
 
 public let shayProtocolVersion = 5
-public let shayVersion = "0.2.0-alpha.2"
+public let shayVersion = "0.2.0-alpha.3"
 public let shayBatteryCutoff = 25
 public let shayGuardStaleSeconds: Int64 = 45
 public let shayMaximumExpirySeconds: Int64 = 365 * 24 * 60 * 60
