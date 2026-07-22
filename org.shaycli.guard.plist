@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.shaycli.guard</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/libexec/shay-core</string>
+        <string>guard</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StartInterval</key>
+    <integer>15</integer>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>Umask</key>
+    <integer>18</integer>
+    <key>StandardOutPath</key>
+    <string>/var/log/shay.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/shay.log</string>
+</dict>
+</plist>

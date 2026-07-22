@@ -1,0 +1,40 @@
+#!/bin/zsh
+set -eu
+
+readonly MOCK_ROOT="${SHAY_MOCK_ROOT:?SHAY_MOCK_ROOT is required}"
+
+case "${0:t}" in
+  pmset)
+    case "$*" in
+      "-g batt")
+        print -r -- "Now drawing from '$(<"$MOCK_ROOT/power_source")'"
+        print -r -- " -InternalBattery-0 (id=1) $(<"$MOCK_ROOT/battery")%; discharging; present: true"
+        ;;
+      "-g")
+        print -r -- "System-wide power settings:"
+        print -r -- " SleepDisabled  $(<"$MOCK_ROOT/sleep_disabled")"
+        ;;
+      "-a disablesleep 0"|"-a disablesleep 1")
+        target="$3"
+        [[ ! -e "$MOCK_ROOT/fail_set_$target" ]] || exit 1
+        [[ -e "$MOCK_ROOT/ignore_set_$target" ]] || print -r -- "$target" >| "$MOCK_ROOT/sleep_disabled"
+        ;;
+      *)
+        print -u2 -r -- "mock pmset: unsupported arguments: $*"
+        exit 64
+        ;;
+    esac
+    ;;
+  thermal)
+    value=$(<"$MOCK_ROOT/thermal")
+    [[ "$value" != "fail" ]] || exit 1
+    print -r -- "$value"
+    ;;
+  launchctl)
+    [[ "$(<"$MOCK_ROOT/guard_loaded")" == "1" ]]
+    ;;
+  *)
+    print -u2 "unknown mock command"
+    exit 64
+    ;;
+esac
